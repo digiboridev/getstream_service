@@ -1,0 +1,24 @@
+{
+  "name": "getstream_service",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "debug:tsw": "tsc --watch",
+    "build": "npm i && tsc",
+    "build:ts": "tsc",
+    "build:docker": "docker build -t getstream_service .",
+    "start": "node lib/index.js",
+    "start:docker": "docker stop getstream_service && docker rm getstream_service || true && docker run -d --name getstream_service -p 3000:3000 getstream_service"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "fastify": "^4.26.2",
+    "stream-chat": "^8.25.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.3.2",
+    "typescript": "^5.4.5"
+  }
+}
