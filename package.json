@@ -14,8 +14,11 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@fastify/cors": "^8.2.1",
     "fastify": "^4.26.2",
-    "stream-chat": "^8.25.1"
+    "stream-chat": "^8.25.1",
+    "dotenv": "^16.0.3",
+    "axios": "^1.4.0"
   },
   "devDependencies": {
     "@types/node": "^20.3.2",
