@@ -1,6 +1,6 @@
 import axios from "axios";
-import { CORE_URI } from "../../core/constants";
-import { AppError } from "../../core/errors";
+import { CORE_URI } from "../core/constants";
+import { AppError } from "../core/errors";
 
 export class UserService {
   static getUserData = async (token: string, tenantId: string) => {

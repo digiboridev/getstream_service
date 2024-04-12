@@ -1,6 +1,6 @@
 import { FastifyInstance } from "fastify";
 import { authMiddleware } from "../middleware/auth.middleware";
-import { gsClient } from "../../core/getstream.client";
+import { GetStreamService } from "../../service/getstream.service";
 
 export const mainController = (fastify: FastifyInstance, _: any, done: Function) => {
   fastify.addHook("preHandler", authMiddleware);
@@ -16,17 +16,14 @@ export const mainController = (fastify: FastifyInstance, _: any, done: Function)
     const { id, name } = request.userData;
     console.log("chat-token: ", id, name);
 
-    await gsClient.upsertUser({ id: id, name: name });
-    const token = gsClient.createToken(id);
+    await GetStreamService.upsertUser({ id: id, name: name });
+    const token = GetStreamService.createToken(id);
 
-    const gfilter = { type: "messaging", members: { $eq: [id, "WebTrit"] } };
-    const gchannels = await gsClient.queryChannels(gfilter);
-    const hasGreeting: boolean = gchannels.length != 0;
+    const hasGreetingChannel: boolean = await GetStreamService.hasConversationBetween([id, "WebTrit"]);
 
-    if (!hasGreeting) {
-      const greetingsChannel = gsClient.channel("messaging", { members: [id, "WebTrit"], created_by_id: "WebTrit" });
-      await greetingsChannel.create();
-      await greetingsChannel.sendMessage({ text: "Welcome to webtrit chat!", user_id: "WebTrit" });
+    if (!hasGreetingChannel) {
+      const chId = await GetStreamService.createChannel("messaging", [id, "WebTrit"], "WebTrit");
+      await GetStreamService.sendMessage(chId, { text: "Welcome to webtrit chat!", user_id: "WebTrit" });
     }
 
     reply.send({ userId: id, token: token });
@@ -52,18 +49,11 @@ export const mainController = (fastify: FastifyInstance, _: any, done: Function)
       const participantId = request.body.participantId;
       console.log("prepare-conversation: ", userId, participantId);
 
-      const filter = { type: "messaging", members: { $eq: [userId, participantId] } };
-      const channels = await gsClient.queryChannels(filter);
-      const existAlready: boolean = channels.length != 0;
-
-      if (existAlready) return reply.send({ channel: channels[0].id });
-
       // TODO: Retrieve the name of the participant from the core backend
-      await gsClient.upsertUser({ id: participantId });
-      const ch = gsClient.channel("messaging", { members: [userId, participantId], created_by_id: userId });
-      await ch.create();
+      await GetStreamService.upsertUser({ id: participantId });
+      await GetStreamService.createChannel("messaging", [userId, participantId], userId);
 
-      reply.send({ channel: ch.id });
+      reply.send({ code: "ok" });
     }
   );
 

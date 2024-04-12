@@ -1,7 +1,7 @@
 import { FastifyRequest, FastifyReply } from "fastify";
 import { errorMessage } from "../../core/errors";
 import axios from "axios";
-import { UserService } from "../service/user.service";
+import { UserService } from "../../service/user.service";
 
 export type UserData = {
   id: string;
