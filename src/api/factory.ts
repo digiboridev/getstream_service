@@ -1,7 +1,7 @@
 import Fastify, { FastifyInstance } from "fastify";
 import cors from "@fastify/cors";
 import { AppError, errorMessage } from "../core/errors";
-import { authRoute } from "./routes/auth";
+import { mainController } from "./controller/main.controller";
 
 
 export class FastifyFactory {
@@ -11,8 +11,8 @@ export class FastifyFactory {
     // Plugins
     await fastify.register(cors);
 
-    // Routes
-    await fastify.register(authRoute, { prefix: "/auth" });
+    // Controllers
+    await fastify.register(mainController, { prefix: "/api" });
 
     // Error handler
     fastify.addHook("onError", async (request, reply, error) => {
