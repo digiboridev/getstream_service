@@ -22,7 +22,7 @@ export class GetStreamService {
     static async createChannel(type: string, members: string[], createdBy: string) {
         const channel = gsClient.channel(type, { members: members, created_by_id: createdBy });
         await channel.create();
-        return channel.cid;
+        return channel.id!;
     }
 
     static async sendMessage(channelId: string, message: { text: string; user_id: string }) {

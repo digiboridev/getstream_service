@@ -17,7 +17,7 @@ export const mainController = (fastify: FastifyInstance, _: any, done: Function)
     console.log("chat-token: ", id, name);
 
     await GetStreamService.upsertUser({ id: id, name: name });
-    const token = GetStreamService.createToken(id);
+    const token = await GetStreamService.createToken(id);
 
     const hasGreetingChannel: boolean = await GetStreamService.hasConversationBetween([id, "WebTrit"]);
 
