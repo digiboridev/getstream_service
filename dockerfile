@@ -10,7 +10,7 @@ RUN npm install
 # Copy source code and build typescript
 COPY /src ./src
 COPY tsconfig.json .
-COPY .env .
+# COPY .env .
 RUN npm run build:ts
 
 # run
