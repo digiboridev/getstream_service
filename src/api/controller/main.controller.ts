@@ -51,9 +51,9 @@ export const mainController = (fastify: FastifyInstance, _: any, done: Function)
 
       // TODO: Retrieve the name of the participant from the core backend
       await GetStreamService.upsertUser({ id: participantId });
-      await GetStreamService.createChannel("messaging", [userId, participantId], userId);
+      const channelId = await GetStreamService.createChannel("messaging", [userId, participantId], userId);
 
-      reply.send({ code: "ok" });
+      reply.send({ code: "ok", channelId: channelId});
     }
   );
 
